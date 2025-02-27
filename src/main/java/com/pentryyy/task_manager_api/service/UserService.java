@@ -2,7 +2,9 @@ package com.pentryyy.task_manager_api.service;
 
 import com.pentryyy.task_manager_api.repository.UserRepository;
 import com.pentryyy.task_manager_api.dto.UserUpdateRequest;
+import com.pentryyy.task_manager_api.enumeration.RoleType;
 import com.pentryyy.task_manager_api.exception.EmailAlreadyExistsException;
+import com.pentryyy.task_manager_api.exception.RoleDoesNotExistException;
 import com.pentryyy.task_manager_api.exception.UserAlreadyDisabledException;
 import com.pentryyy.task_manager_api.exception.UserAlreadyEnabledException;
 import com.pentryyy.task_manager_api.exception.UserDoesNotExistException;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service; 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +52,17 @@ public class UserService {
         }
 
         user.setIsEnabled(true);
+        userRepository.save(user);
+    }
+
+    public void changeRole(Long id, String rolename){
+        User user = findById(id);
+
+        if (!EnumUtils.isValidEnum(RoleType.class, rolename)) {
+            throw new RoleDoesNotExistException(rolename);
+        }
+
+        user.setRole(RoleType.valueOf(rolename));
         userRepository.save(user);
     }
 

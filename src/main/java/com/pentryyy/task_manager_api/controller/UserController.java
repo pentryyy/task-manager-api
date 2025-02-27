@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pentryyy.task_manager_api.dto.PasswordChangeRequest;
+import com.pentryyy.task_manager_api.dto.RoleUpdateRequest;
 import com.pentryyy.task_manager_api.dto.UserUpdateRequest;
 import com.pentryyy.task_manager_api.model.User;
 import com.pentryyy.task_manager_api.service.UserService;
@@ -52,6 +53,22 @@ public class UserController {
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         User user = userService.findById(id);
         return ResponseEntity.ok(user);
+    }
+
+    @PatchMapping("/change-role/{id}")
+    public ResponseEntity<?> changeRole(
+        @PathVariable Long id,  
+        @RequestBody @Valid RoleUpdateRequest request) {
+          
+        userService.changeRole(id, request.getRolename());
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("rolename", request.getRolename())
+                  .put("userId", id);
+
+        return ResponseEntity.ok()
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(jsonObject.toString());
     }
 
     @PatchMapping("/disable-user/{id}")
