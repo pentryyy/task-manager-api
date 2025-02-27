@@ -95,6 +95,20 @@
 			<version>4.31.0</version>
 		</dependency>
 
+		<!-- Документация -->
+
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-core</artifactId>
+			<version>2.2.25</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.8.4</version>
+		</dependency>
+
 		<!-- Для работы с данными -->
 
 		<dependency>
@@ -108,12 +122,6 @@
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
 			<version>3.1.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-core</artifactId>
-			<version>2.2.25</version>
 		</dependency>
 
 		<dependency>

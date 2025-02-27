@@ -22,11 +22,18 @@ import com.pentryyy.task_manager_api.dto.UserUpdateRequest;
 import com.pentryyy.task_manager_api.model.User;
 import com.pentryyy.task_manager_api.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
 @Validated
+@Tag(name = "Пользователи", description = "Управление пользователями")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -34,6 +41,13 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Operation(summary = "Получить всех пользователей", description = "Возвращает страницу пользователей с возможностью сортировки и пагинации.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Успешно получен список пользователей",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(implementation = Page.class))),
+        @ApiResponse(responseCode = "403", description = "Доступ запрещен")
+    })
     @GetMapping("/get-all-users")
     public ResponseEntity<Page<User>> getAllUsers(
         @RequestParam(defaultValue = "0") int page,
@@ -49,12 +63,20 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @Operation(summary = "Получить пользователя по ID", description = "Возвращает данные пользователя по его ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Успешно получен пользователь",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(implementation = User.class))),
+        @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
     @GetMapping("/get-user/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         User user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
 
+    @Operation(summary = "Изменить роль пользователя", description = "Изменяет роль пользователя по его ID.")
     @PatchMapping("/change-role/{id}")
     public ResponseEntity<?> changeRole(
         @PathVariable Long id,  
@@ -71,6 +93,7 @@ public class UserController {
                              .body(jsonObject.toString());
     }
 
+    @Operation(summary = "Отключить пользователя", description = "Деактивирует учетную запись пользователя.")
     @PatchMapping("/disable-user/{id}")
     public ResponseEntity<?> disableUser(@PathVariable Long id) {
         userService.disableUser(id);
@@ -82,6 +105,7 @@ public class UserController {
                              .body(jsonObject.toString());
     }
 
+    @Operation(summary = "Активировать пользователя", description = "Активирует учетную запись пользователя.")
     @PatchMapping("/enable-user/{id}")
     public ResponseEntity<?> enableUser(@PathVariable Long id) {
         userService.enableUser(id);
@@ -93,6 +117,7 @@ public class UserController {
                              .body(jsonObject.toString());
     }
 
+    @Operation(summary = "Обновить данные пользователя", description = "Обновляет данные пользователя по его ID.")
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUser(
         @PathVariable Long id, 
@@ -107,6 +132,7 @@ public class UserController {
                              .body(jsonObject.toString());
     }
 
+    @Operation(summary = "Изменить пароль пользователя", description = "Обновляет пароль пользователя по его ID.")
     @PatchMapping("/change-pass/{id}")
     public ResponseEntity<?> changePassword(
         @PathVariable Long id, 
