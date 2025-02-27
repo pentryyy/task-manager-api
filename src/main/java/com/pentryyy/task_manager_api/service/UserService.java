@@ -25,7 +25,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User findById(Long id){
+    public User findById(Long id) {
         return userRepository.findById(id)
                              .orElseThrow(() -> new UserDoesNotExistException(id));
     }
@@ -54,7 +54,7 @@ public class UserService {
 
     public void updateUser(
         Long id, 
-        UserUpdateRequest request){
+        UserUpdateRequest request) {
         
         User user = findById(id);
 
@@ -73,7 +73,7 @@ public class UserService {
 
     public void changePassword(
         Long id, 
-        String encryptedPassword){
+        String encryptedPassword) {
         
         User user = findById(id);
 
@@ -93,13 +93,13 @@ public class UserService {
         return userRepository.save(user);
     }
     
-    public User getByUsername(String username) {
-        return userRepository.findByUsername(username)
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email)
                              .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
     }
 
     public UserDetailsService userDetailsService() {
-        return this::getByUsername;
+        return this::getByEmail;
     }
 
     public Page<User> getAllUsers(
