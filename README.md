@@ -1,3 +1,11 @@
+#  Документация Swagger
+
+- JSON: `http://localhost:8080/v3/api-docs`
+
+- YAML: `http://localhost:8080/v3/api-docs.yaml`
+
+- Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+
 #  Инструкции для локального запуска 
 
 ##  1. Собираем проект  
