@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.pentryyy.task_manager_api.exception.AccessDeniedException;
+import com.pentryyy.task_manager_api.exception.CommentDoesNotExistException;
 import com.pentryyy.task_manager_api.exception.EmailAlreadyExistsException;
 import com.pentryyy.task_manager_api.exception.PriorityDoesNotExistException;
 import com.pentryyy.task_manager_api.exception.RoleDoesNotExistException;
@@ -140,5 +141,12 @@ public class GlobalExceptionHandler {
         errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+    @ExceptionHandler(CommentDoesNotExistException.class)
+    public ResponseEntity<Map<String, String>> handleCommentDoesNotExistException(CommentDoesNotExistException ex) {
+        errorResponse = new HashMap<>();
+        errorResponse.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 }

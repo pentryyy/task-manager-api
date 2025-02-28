@@ -182,7 +182,7 @@ public class TaskController {
         @PathVariable Long id,
         @RequestBody @Valid ChangeExecutorRequest request) {    
         
-        User user = userService.findById(request.getExecutor());
+        User user = userService.findById(request.getExecutorId());
         taskService.changeExecutor(id, user);
         Task updatedTask = taskService.findById(id);
 

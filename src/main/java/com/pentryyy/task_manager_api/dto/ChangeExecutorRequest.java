@@ -14,5 +14,5 @@ public class ChangeExecutorRequest {
         required = true
     )
     @NotNull(message = "ID исполнителя не может быть пустым")
-    private Long executor;
+    private Long executorId;
 }

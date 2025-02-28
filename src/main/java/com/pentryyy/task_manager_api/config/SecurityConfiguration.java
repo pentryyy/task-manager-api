@@ -49,6 +49,8 @@ public class SecurityConfiguration {
                     .requestMatchers("/users/**").hasRole("ADMIN")
                     .requestMatchers("/tasks/change-status/*").hasAnyRole("ADMIN", "USER")
                     .requestMatchers("/tasks/**").hasRole("ADMIN")
+                    .requestMatchers("/comments/create-comment").hasAnyRole("ADMIN", "USER")
+                    .requestMatchers("/comments/**").hasRole("ADMIN")
                     .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
