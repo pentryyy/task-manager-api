@@ -3,3 +3,7 @@ databaseChangeLog:
       file: db/changelog/changeset/create-users-table.yaml
   - include:
       file: db/changelog/changeset/insert-admin-user.yaml
+  - include:
+      file: db/changelog/changeset/create-tasks-table.yaml
+  - include:
+      file: db/changelog/changeset/create-comments-table.yaml
