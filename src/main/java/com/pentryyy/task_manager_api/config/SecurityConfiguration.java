@@ -47,6 +47,8 @@ public class SecurityConfiguration {
                     .requestMatchers("/v3/api-docs/**").permitAll()
                     .requestMatchers("/v3/api-docs.yaml").permitAll()
                     .requestMatchers("/users/**").hasRole("ADMIN")
+                    .requestMatchers("/tasks/change-status/*").hasAnyRole("ADMIN", "USER")
+                    .requestMatchers("/tasks/**").hasRole("ADMIN")
                     .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

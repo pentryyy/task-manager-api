@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -129,19 +131,25 @@ public class TaskController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Статус обновлен", 
                      content = @Content(schema = @Schema(implementation = ChangeStatusRequest.class))),
-        @ApiResponse(responseCode = "400", description = "Ошибка валидации")
+        @ApiResponse(responseCode = "400", description = "Ошибка валидации"),
+        @ApiResponse(responseCode = "403", description = "Ошибка доступа")
     })
     @PatchMapping("/change-status/{id}")
     public ResponseEntity<?> changeStatus(
         @PathVariable Long id,
         @RequestBody @Valid ChangeStatusRequest request) {    
-            
-        taskService.changeStatus(id, request);
-        Task updatedTask = taskService.findById(id);
+        
+        Authentication authentication = SecurityContextHolder
+            .getContext()
+            .getAuthentication();
+        
+        User currentUser = (User) authentication.getPrincipal();
+
+        taskService.checkAuthority(id, currentUser);
 
         return ResponseEntity.ok()
                              .contentType(MediaType.APPLICATION_JSON)
-                             .body(updatedTask);   
+                             .body(taskService.changeStatus(id, request));   
     }
 
     @Operation(summary = "Изменить приоритет задачи", description = "Обновляет приоритет задачи")

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.pentryyy.task_manager_api.exception.AccessDeniedException;
 import com.pentryyy.task_manager_api.exception.EmailAlreadyExistsException;
 import com.pentryyy.task_manager_api.exception.PriorityDoesNotExistException;
 import com.pentryyy.task_manager_api.exception.RoleDoesNotExistException;
@@ -132,5 +133,12 @@ public class GlobalExceptionHandler {
         errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException ex) {
+        errorResponse = new HashMap<>();
+        errorResponse.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 }

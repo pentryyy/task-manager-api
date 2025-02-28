@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import com.pentryyy.task_manager_api.dto.ChangePriorityRequest;
 import com.pentryyy.task_manager_api.dto.ChangeStatusRequest;
 import com.pentryyy.task_manager_api.dto.TaskUpdateRequest;
+import com.pentryyy.task_manager_api.enumeration.RoleType;
 import com.pentryyy.task_manager_api.enumeration.TaskPriority;
 import com.pentryyy.task_manager_api.enumeration.TaskStatus;
+import com.pentryyy.task_manager_api.exception.AccessDeniedException;
 import com.pentryyy.task_manager_api.exception.PriorityDoesNotExistException;
 import com.pentryyy.task_manager_api.exception.StatusDoesNotExistException;
 import com.pentryyy.task_manager_api.exception.TaskDoesNotExistException;
@@ -114,5 +116,15 @@ public class TaskService {
             return taskRepository.save(task);
         }
         throw new TaskDoesNotExistException(id);
+    }
+
+    public void checkAuthority(Long id, User currentUser){
+        Task task = findById(id);
+
+        if (currentUser.getRole() == RoleType.ROLE_USER) {
+            if (task.getAuthor() != task.getExecutor()) {
+                throw new AccessDeniedException("Нет доступа к редактированию этой задачи");
+            }
+        }
     }
 }
