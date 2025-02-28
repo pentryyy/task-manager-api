@@ -1,5 +1,10 @@
 package com.pentryyy.task_manager_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pentryyy.task_manager_api.serializer.UserIdSerializer;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +28,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tasks")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Task {
     
     @Id
@@ -60,9 +66,11 @@ public class Task {
     @NotNull(message = "Автор задачи не может быть null")
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
+    @JsonSerialize(using = UserIdSerializer.class)
     private User author;
 
     @ManyToOne
     @JoinColumn(name = "executor_id")
+    @JsonSerialize(using = UserIdSerializer.class)
     private User executor;
 }

@@ -7,6 +7,8 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.pentryyy.task_manager_api.enumeration.RoleType;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements UserDetails {
     @Id
     @Column(name = "id")

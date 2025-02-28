@@ -2,6 +2,9 @@ package com.pentryyy.task_manager_api.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pentryyy.task_manager_api.serializer.TaskIdSerializer;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,5 +39,6 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
+    @JsonSerialize(using = TaskIdSerializer.class)
     private Task task;
 }
