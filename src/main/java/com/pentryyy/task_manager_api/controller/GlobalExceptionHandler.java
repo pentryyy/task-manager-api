@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.pentryyy.task_manager_api.exception.EmailAlreadyExistsException;
+import com.pentryyy.task_manager_api.exception.PriorityDoesNotExistException;
 import com.pentryyy.task_manager_api.exception.RoleDoesNotExistException;
+import com.pentryyy.task_manager_api.exception.StatusDoesNotExistException;
+import com.pentryyy.task_manager_api.exception.TaskDoesNotExistException;
 import com.pentryyy.task_manager_api.exception.UserAlreadyDisabledException;
 import com.pentryyy.task_manager_api.exception.UserAlreadyEnabledException;
 import com.pentryyy.task_manager_api.exception.UserDoesNotExistException;
@@ -108,5 +111,26 @@ public class GlobalExceptionHandler {
         errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(TaskDoesNotExistException.class)
+    public ResponseEntity<Map<String, String>> handleTaskDoesNotExistException(TaskDoesNotExistException ex) {
+        errorResponse = new HashMap<>();
+        errorResponse.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(StatusDoesNotExistException.class)
+    public ResponseEntity<Map<String, String>> handleStatusDoesNotExistException(StatusDoesNotExistException ex) {
+        errorResponse = new HashMap<>();
+        errorResponse.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(PriorityDoesNotExistException.class)
+    public ResponseEntity<Map<String, String>> handlePriorityDoesNotExistException(PriorityDoesNotExistException ex) {
+        errorResponse = new HashMap<>();
+        errorResponse.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 }

@@ -50,7 +50,6 @@ databaseChangeLog:
                   name: executor_id
                   type: BIGINT
                   constraints:
-                    nullable: false
                     foreignKeyName: fk_tasks_executor
                     references: users(id)
                     onDelete: SET NULL
