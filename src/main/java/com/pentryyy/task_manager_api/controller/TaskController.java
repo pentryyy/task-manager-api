@@ -39,7 +39,7 @@ import jakarta.validation.Valid;
 @RestController
 @Validated
 @RequestMapping("/tasks")
-@Tag(name = "Задачи", description = "Управление задачами")
+@Tag(name = "Задачи", description = "API для управления задачами")
 public class TaskController {
 
     @Autowired
@@ -52,7 +52,10 @@ public class TaskController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Задача успешно создана", 
                      content = @Content(schema = @Schema(implementation = JSONObject.class))),
-        @ApiResponse(responseCode = "400", description = "Ошибка валидации запроса")
+        @ApiResponse(responseCode = "400", description = "Ошибка валидации запроса"),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }")))
     })
     @PostMapping("/create-task")
     public ResponseEntity<?> createTask(@RequestBody @Valid Task request) {
@@ -68,7 +71,10 @@ public class TaskController {
     @Operation(summary = "Получить список всех задач", description = "Возвращает список задач с пагинацией")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Успешный запрос", 
-                     content = @Content(schema = @Schema(implementation = Page.class)))
+                     content = @Content(schema = @Schema(implementation = Page.class))),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }")))
     })
     @GetMapping("/get-all-tasks")
     public ResponseEntity<Page<Task>> getAllTasks(
@@ -89,6 +95,9 @@ public class TaskController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Задача найдена", 
                      content = @Content(schema = @Schema(implementation = Task.class))),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }"))),
         @ApiResponse(responseCode = "404", description = "Задача не найдена")
     })
     @GetMapping("/get-task/{id}")
@@ -100,6 +109,9 @@ public class TaskController {
     @Operation(summary = "Удалить задачу", description = "Удаляет задачу по её ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Задача удалена"),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }"))),
         @ApiResponse(responseCode = "404", description = "Задача не найдена")
     })
     @DeleteMapping("/delete-task/{id}")
@@ -112,6 +124,9 @@ public class TaskController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Задача обновлена", 
                      content = @Content(schema = @Schema(implementation = TaskUpdateRequest.class))),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }"))),
         @ApiResponse(responseCode = "400", description = "Ошибка валидации")
     })
     @PatchMapping("/update-task/{id}")
@@ -132,7 +147,9 @@ public class TaskController {
         @ApiResponse(responseCode = "200", description = "Статус обновлен", 
                      content = @Content(schema = @Schema(implementation = ChangeStatusRequest.class))),
         @ApiResponse(responseCode = "400", description = "Ошибка валидации"),
-        @ApiResponse(responseCode = "403", description = "Ошибка доступа")
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }")))
     })
     @PatchMapping("/change-status/{id}")
     public ResponseEntity<?> changeStatus(
@@ -156,6 +173,9 @@ public class TaskController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Приоритет обновлен", 
                      content = @Content(schema = @Schema(implementation = ChangePriorityRequest.class))),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }"))),
         @ApiResponse(responseCode = "400", description = "Ошибка валидации")
     })
     @PatchMapping("/change-priority/{id}")
@@ -175,6 +195,9 @@ public class TaskController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Исполнитель обновлен", 
                      content = @Content(schema = @Schema(implementation = ChangeExecutorRequest.class))),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }"))),
         @ApiResponse(responseCode = "400", description = "Ошибка валидации")
     })
     @PatchMapping("/change-executor/{id}")

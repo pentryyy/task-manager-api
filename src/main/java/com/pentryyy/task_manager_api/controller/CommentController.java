@@ -25,11 +25,18 @@ import com.pentryyy.task_manager_api.model.User;
 import com.pentryyy.task_manager_api.service.CommentService;
 import com.pentryyy.task_manager_api.service.TaskService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @Validated
 @RequestMapping("/comments")
+@Tag(name = "Комментарии", description = "API для управления комментариями")
 public class CommentController {
 
     @Autowired
@@ -38,6 +45,20 @@ public class CommentController {
     @Autowired
     private TaskService taskService;
 
+    @Operation(
+        summary = "Создать комментарий",
+        description = "Добавляет новый комментарий к указанной задаче. Доступно только авторизованным пользователям."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Комментарий успешно создан",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(example = "{ \"id\": 1 }"))),
+        @ApiResponse(responseCode = "400", description = "Некорректные данные запроса"),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }"))),
+        @ApiResponse(responseCode = "404", description = "Задача не найдена")
+    })
     @PostMapping("/create-comment")
     public ResponseEntity<?> createComment(@RequestBody @Valid CommentCreateRequest request) {
         Task task = taskService.findById(request.getTaskId());
@@ -59,6 +80,16 @@ public class CommentController {
                              .body(jsonObject.toString());
     }
 
+    @Operation(
+        summary = "Получить все комментарии",
+        description = "Возвращает страницу комментариев с возможностью сортировки и пагинации."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Успешное получение списка комментариев"),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }")))
+    })
     @GetMapping("/get-all-comments")
     public ResponseEntity<Page<Comment>> getAllComments(
         @RequestParam(defaultValue = "0") int page,
@@ -74,12 +105,34 @@ public class CommentController {
         return ResponseEntity.ok(Comments);
     }
 
+    @Operation(
+        summary = "Получить комментарий по ID",
+        description = "Возвращает комментарий по указанному идентификатору."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Комментарий найден"),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }"))),
+        @ApiResponse(responseCode = "404", description = "Комментарий не найден")
+    })
     @GetMapping("/get-comment/{id}")
     public ResponseEntity<?> getCommentById(@PathVariable Long id) {
         Comment Comment = commentService.findById(id);
         return ResponseEntity.ok(Comment);
     }
 
+    @Operation(
+        summary = "Удалить комментарий",
+        description = "Удаляет комментарий по ID. Только пользователи с соответствующими правами могут удалять комментарии."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Комментарий успешно удален"),
+        @ApiResponse(responseCode = "403", description = "Отсутствие прав на выполнение операции",
+                     content = @Content(mediaType = "application/json",
+                     schema = @Schema(example = "{ \"error\": \"Нет доступа к редактированию этой задачи\" }"))),
+        @ApiResponse(responseCode = "404", description = "Комментарий не найден")
+    })
     @DeleteMapping("/delete-comment/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
