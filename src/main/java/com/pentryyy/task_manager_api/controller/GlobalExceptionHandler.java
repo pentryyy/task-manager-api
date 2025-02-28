@@ -124,13 +124,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleStatusDoesNotExistException(StatusDoesNotExistException ex) {
         errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(PriorityDoesNotExistException.class)
     public ResponseEntity<Map<String, String>> handlePriorityDoesNotExistException(PriorityDoesNotExistException ex) {
         errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }
